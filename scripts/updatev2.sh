@@ -8,14 +8,10 @@ cd $workdir
 if [ ! -d venv ]; then
     python -m virtualenv venv
     . venv/bin/activate
-    pip install azure-storage-file-datalake azure-storage-blob
+    pip install azure-storage-file-datalake azure-storage-blob azure-storage-file-share azure-storage-queue
 fi
 
 ver='12_0'
-ver=$(find venv -name '_constants.py' | grep blob | xargs grep 'X_MS_VERSION')
-ver=${ver#X_MS_VERSION = \'}
-ver=${ver%\'}
-ver=${ver//-/_}
 
 src_root=$(cd venv/lib/$(ls venv/lib); pwd)/site-packages/azure/storage
 tgt=../azure/multiapi/storagev2/v$ver
@@ -30,11 +26,12 @@ for service in blob fileshare filedatalake queue; do
         # remove BOM
         sed -i '1s/^\xEF\xBB\xBF//' $f
 
-        if [ "$service" == "filedatalake" ]; then
+        if [ "$service" = "filedatalake" ]; then
             # make relative reference to azure.storage.blob
             path=$(realpath --relative-to=$f $src)
             dots=$(echo ${path//".."/"."} | tr -d /)
-            sed -i 's/from azure.storage.blob./from /$dots.blob./g' $f
+            sed -i 's/from azure.storage.blob import/from '$dots'.blob import/g' $f
+            sed -i 's/from azure.storage.blob./from '$dots'.blob./g' $f
         fi
     done
 
