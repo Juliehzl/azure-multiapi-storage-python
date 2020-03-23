@@ -28,7 +28,7 @@ for service in blob fileshare filedatalake queue; do
 
         if [ "$service" = "filedatalake" ]; then
             # make relative reference to azure.storage.blob
-            path=$(realpath --relative-to=$f $src)
+            path=$(realpath --relative-to=$f $tgt/$service)
             dots=$(echo ${path//".."/"."} | tr -d /)
             sed -i 's/from azure.storage.blob import/from '$dots'.blob import/g' $f
             sed -i 's/from azure.storage.blob./from '$dots'.blob./g' $f
