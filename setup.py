@@ -56,6 +56,7 @@ setup(
     zip_safe=False,
     packages=find_packages(),
     install_requires=[
+	'azure-core',
         'azure-nspkg',
         'azure-common',
         'cryptography',
