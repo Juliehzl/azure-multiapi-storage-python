@@ -21,6 +21,7 @@ Change Log
 +++++
 * Utilize azure-stroage-blob 12.5.0  for blob new feature support
 * Utilize azure-stroage-queue 12.1.3  for queue new feature support
+* Add v2020-02-10 api version support for filedatalake
 
 0.4.1
 +++++
